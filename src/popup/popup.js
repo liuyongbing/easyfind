@@ -190,3 +190,6 @@ function escapeHtml(text) {
   div.textContent = text;
   return div.innerHTML;
 }
+
+// 暴露给全局，供 popup.js 使用
+window.RuleEditor = RuleEditor;
