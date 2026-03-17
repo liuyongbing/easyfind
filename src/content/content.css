@@ -1,0 +1,104 @@
+/* EasyFind 内容样式 */
+
+/* 高亮样式 */
+.easyfind-highlight {
+  outline: 3px solid #4CAF50 !important;
+  outline-offset: 2px !important;
+  background-color: rgba(76, 175, 80, 0.15) !important;
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.3), 0 0 12px rgba(76, 175, 80, 0.4) !important;
+  transition: box-shadow 0.3s ease, background-color 0.3s ease !important;
+}
+
+.easyfind-highlight:hover {
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.5), 0 0 20px rgba(76, 175, 80, 0.6) !important;
+}
+
+/* 变暗样式 */
+.easyfind-dim {
+  opacity: 0.25 !important;
+  filter: grayscale(50%) !important;
+  pointer-events: none !important;
+  transition: opacity 0.3s ease, filter 0.3s ease !important;
+}
+
+/* 隐藏样式 */
+.easyfind-hide {
+  display: none !important;
+}
+
+/* 标记样式（用于显示匹配信息） */
+.easyfind-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #4CAF50;
+  color: white;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-weight: bold;
+  z-index: 999999;
+  pointer-events: none;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* 确保高亮元素有相对定位（用于 badge） */
+.easyfind-highlight {
+  position: relative !important;
+}
+
+/* 动画效果 */
+@keyframes easyfind-pulse {
+  0% {
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.3), 0 0 12px rgba(76, 175, 80, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.4), 0 0 20px rgba(76, 175, 80, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.3), 0 0 12px rgba(76, 175, 80, 0.4);
+  }
+}
+
+.easyfind-highlight-pulse {
+  animation: easyfind-pulse 2s ease-in-out infinite;
+}
+
+/* 工具提示样式 */
+.easyfind-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: white;
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  z-index: 999999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.easyfind-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: #333;
+}
+
+.easyfind-highlight:hover .easyfind-tooltip {
+  opacity: 1;
+}
+
+/* 高优先级覆盖 */
+.easyfind-highlight,
+.easyfind-dim,
+.easyfind-hide {
+  /* 确保样式不被页面覆盖 */
+}
