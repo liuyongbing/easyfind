@@ -28,11 +28,7 @@
       </section>
 
       <footer class="footer">
-        <button id="btn-new" class="btn btn-primary">+ 新建规则</button>
-        <div class="btn-group">
-          <button id="btn-import" class="btn btn-secondary">导入</button>
-          <button id="btn-export" class="btn btn-secondary">导出</button>
-        </div>
+        <button id="btn-new" class="btn btn-primary btn-full">+ 新建规则</button>
       </footer>
     </div>
 
@@ -46,78 +42,13 @@
       <form id="rule-form" class="rule-form">
         <div class="form-group">
           <label>规则名称 <span class="required">*</span></label>
-          <input type="text" id="input-name" placeholder="例如: 筛选高价商品" required>
+          <input type="text" id="input-name" placeholder="例如: 筛选包含"视频"的内容" required>
         </div>
 
         <div class="form-group">
-          <label>适用域名</label>
-          <input type="text" id="input-domains" placeholder="例如: *.taobao.com">
-          <span class="hint">多个域名用逗号分隔，* 表示所有网站</span>
-        </div>
-
-        <div class="form-group">
-          <label>目标选择器 <span class="required">*</span></label>
-          <input type="text" id="input-selector" placeholder="例如: .product-item" required>
-          <span class="hint">CSS 选择器，选中要筛选的元素</span>
-        </div>
-
-        <!-- 高级设置折叠区 -->
-        <div class="advanced-section">
-          <button type="button" class="advanced-toggle" id="btn-advanced">高级设置 ▼</button>
-          <div class="advanced-content collapsed" id="advanced-content">
-            <div class="form-group">
-              <label>数据选择器 (可选)</label>
-              <input type="text" id="input-data-selector" placeholder="例如: .price">
-              <span class="hint">包含筛选数据的子元素</span>
-            </div>
-
-            <div class="form-group">
-              <label>匹配正则 (可选)</label>
-              <input type="text" id="input-pattern" placeholder="例如: (\d+)元">
-              <span class="hint">用于提取数据的正则表达式</span>
-            </div>
-
-            <div class="form-group">
-              <label>条件表达式</label>
-              <div class="condition-row">
-                <select id="select-condition-op">
-                  <option value="contains">包含</option>
-                  <option value="notContains">不包含</option>
-                  <option value="matches">匹配正则</option>
-                  <option value=">">大于</option>
-                  <option value=">=">大于等于</option>
-                  <option value="<">小于</option>
-                  <option value="<=">小于等于</option>
-                  <option value="==">等于</option>
-                  <option value="!=">不等于</option>
-                  <option value="isEmpty">为空</option>
-                  <option value="isNotEmpty">不为空</option>
-                </select>
-                <input type="text" id="input-condition-value" placeholder="值">
-              </div>
-              <span class="hint">支持单位: K(千)、M(百万)、万、亿</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group half">
-            <label>匹配时</label>
-            <select id="select-match-action">
-              <option value="highlight">高亮</option>
-              <option value="dim">淡化</option>
-              <option value="hide">隐藏</option>
-              <option value="none">无操作</option>
-            </select>
-          </div>
-          <div class="form-group half">
-            <label>不匹配时</label>
-            <select id="select-nomatch-action">
-              <option value="none">无操作</option>
-              <option value="dim">淡化</option>
-              <option value="hide">隐藏</option>
-            </select>
-          </div>
+          <label>正则表达式 <span class="required">*</span></label>
+          <input type="text" id="input-pattern" placeholder="例如: 视频|教程|课程" required>
+          <span class="hint">匹配的文本将被高亮显示</span>
         </div>
       </form>
 

@@ -53,7 +53,7 @@ async function loadRules() {
       <div class="rule-item" data-id="${rule.id}">
         <div class="rule-info">
           <div class="rule-name">${escapeHtml(rule.name)}</div>
-          <div class="rule-domain">${escapeHtml(rule.domains?.join(', ') || rule.domainPattern || '所有网站')}</div>
+          <div class="rule-domain">${escapeHtml(rule.extractPattern || rule.conditions?.[0]?.value || '正则')}</div>
         </div>
         <div class="rule-toggle ${rule.enabled ? 'active' : ''}" data-id="${rule.id}"></div>
         <div class="rule-actions">
@@ -121,68 +121,6 @@ function bindEvents() {
       window.RuleEditor.open(null);
     }
   });
-
-  // 导入按钮
-  document.getElementById('btn-import').addEventListener('click', () => importRules());
-
-  // 导出按钮
-  document.getElementById('btn-export').addEventListener('click', async () => {
-    const rules = await EasyFindStorage.getRules();
-    downloadJSON(rules, 'easyfind-rules.json');
-  });
-}
-
-// 导入规则
-async function importRules() {
-  const input = document.createElement('input');
-  input.type = 'file';
-  input.accept = '.json';
-
-  input.onchange = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    try {
-      const text = await file.text();
-      const data = JSON.parse(text);
-
-      // 支持数组或 { rules: [...] } 格式
-      const rules = Array.isArray(data) ? data : (data.rules || []);
-
-      if (!rules.length) {
-        alert('未找到有效规则');
-        return;
-      }
-
-      // 确认导入
-      const confirmed = confirm(`将导入 ${rules.length} 条规则，是否继续？`);
-      if (!confirmed) return;
-
-      // 合并导入
-      const count = await EasyFindStorage.importRules(rules);
-      await loadRules();
-
-      alert(`成功导入 ${count} 条规则`);
-    } catch (error) {
-      alert('导入失败: ' + error.message);
-    }
-  };
-
-  input.click();
-}
-
-// 下载 JSON 文件
-function downloadJSON(data, filename) {
-  const json = JSON.stringify(data, null, 2);
-  const blob = new Blob([json], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  a.click();
-
-  URL.revokeObjectURL(url);
 }
 
 function escapeHtml(text) {

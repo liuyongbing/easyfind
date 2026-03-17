@@ -388,6 +388,10 @@ body {
   flex: 1;
 }
 
+.btn-full {
+  width: 100%;
+}
+
 /* ===== 滚动条样式 ===== */
 
 .rules-list::-webkit-scrollbar,

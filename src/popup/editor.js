@@ -1,4 +1,4 @@
-// editor.js - 规则编辑器模块
+// editor.js - 规则编辑器模块 (简化版)
 
 const RuleEditor = {
   currentRule: null,  // 当前编辑的规则 (null = 新建)
@@ -21,14 +21,6 @@ const RuleEditor = {
 
     // 测试按钮
     document.getElementById('btn-test').addEventListener('click', () => this.test());
-
-    // 高级设置折叠
-    document.getElementById('btn-advanced').addEventListener('click', (e) => {
-      const content = document.getElementById('advanced-content');
-      content.classList.toggle('collapsed');
-      e.target.textContent = content.classList.contains('collapsed')
-        ? '高级设置 ▼' : '高级设置 ▲';
-    });
   },
 
   // 打开编辑器 (rule = null 表示新建)
@@ -60,42 +52,9 @@ const RuleEditor = {
   // 填充表单
   populateForm(rule) {
     document.getElementById('input-name').value = rule.name || '';
-
-    // 域名处理
-    const domains = rule.domains
-      ? rule.domains.join(', ')
-      : (rule.domainPattern || '');
-    document.getElementById('input-domains').value = domains;
-
-    // 选择器处理
-    document.getElementById('input-selector').value =
-      rule.targetSelector || rule.selector || '';
-
-    // 操作处理
-    document.getElementById('select-match-action').value =
-      rule.actions?.match || rule.action || 'highlight';
-    document.getElementById('select-nomatch-action').value =
-      rule.actions?.noMatch || 'none';
-
-    // 高级设置
-    const dataSelector = document.getElementById('input-data-selector');
-    const pattern = document.getElementById('input-pattern');
-    const conditionOp = document.getElementById('select-condition-op');
-    const conditionValue = document.getElementById('input-condition-value');
-
-    if (dataSelector) {
-      dataSelector.value = rule.dataSelector || '';
-    }
-    if (pattern) {
-      pattern.value = rule.extractPattern || '';
-    }
-
-    // 条件表达式
-    if (rule.conditions && rule.conditions.length > 0) {
-      const cond = rule.conditions[0];
-      if (conditionOp) conditionOp.value = cond.operator || 'contains';
-      if (conditionValue) conditionValue.value = cond.value || '';
-    }
+    // 从 conditions 中提取正则
+    const pattern = rule.extractPattern || rule.conditions?.[0]?.value || '';
+    document.getElementById('input-pattern').value = pattern;
   },
 
   // 清空表单
@@ -105,56 +64,25 @@ const RuleEditor = {
 
   // 从表单获取规则数据
   getFormData() {
-    const domainsInput = document.getElementById('input-domains').value.trim();
-    const domains = domainsInput
-      ? domainsInput.split(',').map(d => d.trim()).filter(d => d)
-      : ['*'];
+    const name = document.getElementById('input-name').value.trim();
+    const pattern = document.getElementById('input-pattern').value.trim();
 
-    const data = {
-      name: document.getElementById('input-name').value.trim(),
-      domains: domains,
-      domainPattern: domains[0],  // 向后兼容
-      targetSelector: document.getElementById('input-selector').value.trim(),
-      selector: document.getElementById('input-selector').value.trim(),  // 向后兼容
+    return {
+      name,
+      domains: ['*'],  // 默认适用所有网站
+      // 使用正则匹配页面文本
+      conditions: [{
+        field: 'text',
+        operator: 'matches',
+        value: pattern
+      }],
+      extractPattern: pattern,
       actions: {
-        match: document.getElementById('select-match-action').value,
-        noMatch: document.getElementById('select-nomatch-action').value
+        match: 'highlight',
+        noMatch: 'none'
       },
-      action: document.getElementById('select-match-action').value,  // 向后兼容
       enabled: true
     };
-
-    // 高级设置
-    const dataSelector = document.getElementById('input-data-selector')?.value.trim();
-    const pattern = document.getElementById('input-pattern')?.value.trim();
-    const conditionOp = document.getElementById('select-condition-op')?.value;
-    const conditionValue = document.getElementById('input-condition-value')?.value.trim();
-
-    if (dataSelector) {
-      data.dataSelector = dataSelector;
-    }
-
-    if (pattern) {
-      data.extractPattern = pattern;
-    }
-
-    // 条件表达式 - 对于 isEmpty 和 isNotEmpty 不需要 value
-    if (conditionOp && !['isEmpty', 'isNotEmpty'].includes(conditionOp)) {
-      if (conditionValue) {
-        data.conditions = [{
-          field: 'text',
-          operator: conditionOp,
-          value: conditionValue
-        }];
-      }
-    } else if (conditionOp && ['isEmpty', 'isNotEmpty'].includes(conditionOp)) {
-      data.conditions = [{
-        field: 'text',
-        operator: conditionOp
-      }];
-    }
-
-    return data;
   },
 
   // 保存规则
@@ -168,8 +96,16 @@ const RuleEditor = {
       return;
     }
 
-    if (!formData.targetSelector) {
-      alert('请填写目标选择器');
+    if (!formData.extractPattern) {
+      alert('请填写正则表达式');
+      return;
+    }
+
+    // 验证正则是否有效
+    try {
+      new RegExp(formData.extractPattern);
+    } catch (err) {
+      alert('正则表达式无效: ' + err.message);
       return;
     }
 
@@ -198,8 +134,16 @@ const RuleEditor = {
   async test() {
     const formData = this.getFormData();
 
-    if (!formData.targetSelector) {
-      alert('请先填写目标选择器');
+    if (!formData.extractPattern) {
+      alert('请先填写正则表达式');
+      return;
+    }
+
+    // 验证正则
+    try {
+      new RegExp(formData.extractPattern);
+    } catch (err) {
+      alert('正则表达式无效: ' + err.message);
       return;
     }
 
