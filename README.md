@@ -1,6 +1,6 @@
 # 易寻 EasyFind
 
-根据正则表达式和数值条件筛选网页内容的 Chrome/Edge 浏览器扩展。
+增强的网页文本搜索 Chrome/Edge 浏览器扩展，复刻并扩展浏览器原生的 Ctrl+F 查找功能。
 
 ## 安装
 
@@ -9,189 +9,120 @@
 1. 打开 Chrome 浏览器，访问 `chrome://extensions/`
 2. 开启右上角的「开发者模式」
 3. 点击「加载已解压的扩展程序」
-4. 选择 `easyfind` 目录
+4. 选择 `src` 目录
 5. 扩展图标将出现在工具栏
 
 ## 使用方法
 
+### 快捷键
+
+- **Ctrl+Shift+F** (Windows/Linux) 或 **Cmd+Shift+F** (Mac)：打开/关闭搜索框
+- **Enter**：跳转到下一个匹配项
+- **Shift+Enter**：跳转到上一个匹配项
+- **ESC**：关闭搜索框并清除高亮
+
+### 弹窗操作
+
 1. 点击浏览器工具栏中的扩展图标
-2. 弹窗显示当前网站域名
-3. 点击「新建规则」创建筛选规则
-4. 支持导入/导出规则配置
+2. 点击「打开搜索框」按钮
 
 ## 功能特性
 
-### 规则管理
-- 创建、编辑、删除、导入/导出筛选规则
-- 完整的规则编辑界面，支持高级设置
-- 域名匹配（支持通配符）
+### 基础查找功能
 
-### 筛选引擎
-- 正则表达式匹配
-- 数值条件判断（大于、小于、等于等）
-- 单位自动转换（K、M、万、亿）
-- 多条件组合（AND/OR）
+- **实时高亮**：输入时即时高亮匹配文本（黄色背景）
+- **当前匹配高亮**：当前聚焦的匹配项使用橙色高亮
+- **匹配计数**：显示当前匹配项 / 总匹配数（如 `3/15`）
+- **导航跳转**：支持 Enter / Shift+Enter 在匹配项之间跳转
+- **平滑滚动**：自动滚动到当前匹配项
 
-### 条件操作符
-- 包含 / 不包含
-- 匹配正则 / 不匹配正则
-- 大于 / 大于等于 / 小于 / 小于等于
-- 等于 / 不等于
-- 为空 / 不为空
+### 增强功能
 
-### 多种操作
-- 高亮 - 绿色边框高亮显示
-- 淡化 - 降低透明度
-- 隐藏 - 完全隐藏元素
+- **正则表达式支持**：点击 `.*` 按钮启用正则模式
+- **预设正则表达式**：
+  - B站时长(1h+)：匹配超过1小时的B站视频时长
+  - 极客购买量(1万+)：匹配5位及以上数字
+- **自定义预设**：保存常用的正则表达式供后续使用
+- **错误提示**：正则表达式错误时显示友好提示
 
-### DOM 处理
-- MutationObserver 智能监听
-- 动态内容自动处理（AJAX、SPA）
-- 节流防抖优化
-- 元素缓存避免重复处理
-- 选择器缓存提升性能
-- 支持 SPA 路由切换
+### UI 设计
+
+- **悬浮搜索框**：固定在页面右上角
+- **深色/浅色主题**：自动适配系统主题
+- **打印友好**：打印时自动隐藏搜索框
 
 ## 目录结构
 
 ```
 easyfind/
-├── manifest.json           # 扩展配置
 ├── src/
-│   ├── popup/              # 弹窗界面
-│   │   ├── popup.html
-│   │   ├── popup.js
-│   │   ├── popup.css
-│   │   └── editor.js       # 规则编辑器
-│   ├── content/            # 内容脚本
-│   │   ├── content.js      # 主逻辑
-│   │   ├── filter-engine.js # 筛选引擎
-│   │   ├── element-cache.js # 元素缓存
-│   │   ├── dom-watcher.js  # DOM 监听器
-│   │   ├── performance-monitor.js # 性能监控
-│   │   └── content.css     # 筛选样式
-│   ├── background/         # 后台服务
-│   │   └── service-worker.js
-│   ├── utils/              # 工具函数
-│   │   └── storage.js
-│   ├── presets/            # 预设规则
-│   │   └── default-rules.json
-│   └── icons/              # 扩展图标
-└── scripts/                # 工具脚本
-    ├── generate-icons.html
-    ├── generate-icons.js
-    └── generate-icons-pure.js
+│   ├── manifest.json        # 扩展配置
+│   ├── content.js           # 内容脚本（核心逻辑）
+│   ├── popup.html           # 弹窗界面
+│   ├── popup.js             # 弹窗逻辑
+│   ├── styles/
+│   │   └── searchbox.css    # 搜索框和高亮样式
+│   └── icons/               # 扩展图标
+│       ├── icon16.svg
+│       ├── icon48.svg
+│       └── icon128.svg
+├── scripts/                 # 工具脚本
+├── tests/                   # 测试文件
+└── docs/                    # 文档
 ```
 
-## 规则示例
+## 技术实现
 
-### 示例 1: 筛选高价商品
-```json
-{
-  "name": "筛选 100 元以上商品",
-  "domains": ["*.taobao.com"],
-  "targetSelector": ".item",
-  "dataSelector": ".price",
-  "conditions": [{
-    "operator": ">=",
-    "value": "100"
-  }],
-  "actions": { "match": "highlight", "noMatch": "dim" }
-}
+### 文本查找引擎
+
+- 使用 `TreeWalker` 遍历 DOM 文本节点
+- 支持普通文本匹配和正则表达式匹配
+- 自动跳过脚本、样式和搜索框内的文本
+
+### 高亮渲染
+
+- 使用 `<mark>` 标签包裹匹配文本
+- 通过 `Range.surroundContents()` 精确高亮
+- 保持原有 DOM 结构
+
+### 键盘快捷键
+
+- 通过 `manifest.json` 的 `commands` 配置快捷键
+- 内容脚本监听键盘事件实现导航功能
+
+### 预设管理
+
+- 默认预设内置在代码中
+- 自定义预设使用 `localStorage` 存储
+
+## 预设正则示例
+
+### B站时长(1h+)
+
+```
+[1-9]\d*:\d{2}:\d{2}
 ```
 
-### 示例 2: 筛选长视频
-```json
-{
-  "name": "筛选 1 小时以上视频",
-  "domains": ["*.bilibili.com"],
-  "targetSelector": ".bili-video-card",
-  "dataSelector": ".duration",
-  "extractPattern": "(\\d+):(\\d{2}):(\\d{2})",
-  "conditions": [{
-    "groupIndex": 1,
-    "operator": ">=",
-    "value": "1"
-  }],
-  "actions": { "match": "highlight", "noMatch": "none" }
-}
+匹配格式为 `时:分:秒` 且小时数大于等于1的时长。
+
+### 极客购买量(1万+)
+
+```
+\d{5,}
 ```
 
-### 示例 3: 隐藏广告
-```json
-{
-  "name": "隐藏广告",
-  "domains": ["*"],
-  "targetSelector": "[class*='ad-'], [id*='ad-'], .advertisement",
-  "actions": { "match": "hide", "noMatch": "none" }
-}
-```
+匹配5位及以上的数字，适用于筛选购买量超过1万的商品。
 
-## 性能优化
+## 开发说明
 
-### 节流处理
-DOM 变化使用 300ms 节流，避免频繁触发。
+### Manifest V3
 
-### 元素缓存
-- WeakSet 自动垃圾回收
-- 内容哈希检测变化
-- 避免重复处理
+本扩展使用 Manifest V3 规范开发。
 
-### 选择器缓存
-- LRU 淘汰策略
-- 5 秒 TTL 过期
-- 最大 100 条缓存
+### 权限要求
 
-### 批量处理
-每批最多 50 个元素，使用 requestAnimationFrame 调度。
-
-## 开发
-
-### 重新生成图标
-
-```bash
-node scripts/generate-icons-pure.js
-```
-
-或在浏览器中打开 `scripts/generate-icons.html` 手动生成。
-
-## 测试
-
-### 测试页面
-
-在浏览器中打开 `tests/test-runner.html` 进行功能测试。
-
-测试覆盖：
-- 商品价格筛选
-- 视频时长筛选
-- 文章关键词筛选
-- 广告元素隐藏
-- 数值单位转换
-- 动态内容处理
-
-### 控制台调试
-
-```javascript
-// 获取当前状态
-chrome.runtime.sendMessage({ action: 'getStats' }, console.log);
-
-// 获取性能报告
-chrome.runtime.sendMessage({ action: 'getPerformance' }, console.log);
-
-// 启用调试模式
-chrome.runtime.sendMessage({ action: 'enableDebug' }, console.log);
-
-// 清除所有效果
-chrome.runtime.sendMessage({ action: 'clearEffects' }, console.log);
-```
-
-### 性能监控
-
-扩展内置性能监控模块，可追踪：
-- 规则处理时间
-- DOM 处理时间
-- 缓存命中率
-- 内存使用
+- `activeTab`：访问当前标签页
+- `storage`：存储设置（预留）
 
 ## 许可证
 

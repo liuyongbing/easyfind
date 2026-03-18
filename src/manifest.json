@@ -1,0 +1,40 @@
+{
+  "manifest_version": 3,
+  "name": "EasyFind - 网页文本搜索增强",
+  "version": "1.0.0",
+  "description": "增强的网页文本搜索工具，复刻并扩展 Ctrl+F 功能",
+  "permissions": [
+    "activeTab",
+    "storage"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.svg",
+      "48": "icons/icon48.svg",
+      "128": "icons/icon128.svg"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.svg",
+    "48": "icons/icon48.svg",
+    "128": "icons/icon128.svg"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["styles/searchbox.css"],
+      "run_at": "document_end"
+    }
+  ],
+  "commands": {
+    "toggle-search": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+F",
+        "mac": "Command+Shift+F"
+      },
+      "description": "打开/关闭搜索框"
+    }
+  }
+}

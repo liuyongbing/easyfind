@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EasyFind</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 280px;
+      padding: 16px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      color: #1f2937;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .shortcut {
+      background: #f3f4f6;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      color: #6b7280;
+      font-family: 'Courier New', monospace;
+    }
+
+    .info {
+      margin-bottom: 12px;
+    }
+
+    .info p {
+      color: #6b7280;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .features {
+      list-style: none;
+    }
+
+    .features li {
+      padding: 6px 0;
+      color: #4b5563;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .features li::before {
+      content: '✓';
+      color: #10b981;
+      font-weight: bold;
+    }
+
+    .footer {
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid #e5e7eb;
+      text-align: center;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 10px 16px;
+      background: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .btn:hover {
+      background: #2563eb;
+    }
+
+    .btn:active {
+      background: #1d4ed8;
+    }
+
+    .version {
+      margin-top: 12px;
+      font-size: 11px;
+      color: #9ca3af;
+    }
+
+    .presets-preview {
+      margin-bottom: 12px;
+      padding: 12px;
+      background: #f9fafb;
+      border-radius: 6px;
+    }
+
+    .presets-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 8px;
+    }
+
+    .preset-tag {
+      display: inline-block;
+      padding: 3px 8px;
+      margin: 2px;
+      background: #e0e7ff;
+      color: #4338ca;
+      font-size: 11px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="icon">F</div>
+    <div>
+      <div class="title">EasyFind</div>
+      <span class="shortcut">Ctrl+Shift+F</span>
+    </div>
+  </div>
+
+  <div class="info">
+    <p>增强的网页文本搜索工具</p>
+    <ul class="features">
+      <li>实时高亮匹配文本</li>
+      <li>快速导航搜索结果</li>
+      <li>支持 Enter/Shift+Enter 跳转</li>
+      <li>ESC 键快速关闭</li>
+      <li>⚡ 预设正则表达式</li>
+      <li>🔍 正则模式搜索</li>
+    </ul>
+  </div>
+
+  <div class="presets-preview">
+    <div class="presets-title">内置预设</div>
+    <div class="preset-tag">B站时长1h+</div>
+    <div class="preset-tag">极客购买量1万+</div>
+  </div>
+
+  <div class="footer">
+    <button class="btn" id="open-search">打开搜索框</button>
+    <div class="version">版本 1.0.0</div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
